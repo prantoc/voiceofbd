@@ -17,7 +17,7 @@ class HomeController extends Controller
     {
         $posts = DB::table('posts')->get();
         return response()->json($posts);
-        // return $posts;      //['this route you can also use insted of avob route']
+        // return $posts;      //['this return you can also use insted of avob return method']
     }
 
     /**
@@ -40,39 +40,39 @@ class HomeController extends Controller
     {
 
     // for single data store this code ----------------->
-        // $this->validate($request, [
-        //     'title' => 'required',
-        //     'body' => 'required',
+        $this->validate($request, [
+            'title' => 'required',
+            'body' => 'required',
     
-        // ]);
+        ]);
 
 
-        // $post['title'] = $request->title;
-        // $post['body'] = $request->body;
+        $post['title'] = $request->title;
+        $post['body'] = $request->body;
 
-        // DB::table('posts')->insert($post);
-        // return response('Succeded');
+        DB::table('posts')->insert($post);
+        return response('Succeded');
 
 
     // for multiple data store this code ----------------->
 
-        $Post = json_decode($request->post);
-        $post_c = $Post->posts;
+        // $Post = json_decode($request->post);
+        // $post_c = $Post->posts;
 
-        $validator = Validator::make($post_c, [
-            'title' => 'required',
-            'body' => 'required',
+        // $validator = Validator::make($post_c, [
+        //     'title' => 'required',
+        //     'body' => 'required',
 
-        ]);
+        // ]);
 
-        foreach($Post->posts as $post){
-            $postStore['title'] = $post->title;
-            $postStore['body'] = $post->body;
+        // foreach($Post->posts as $post){
+        //     $postStore['title'] = $post->title;
+        //     $postStore['body'] = $post->body;
 
-            DB::table('posts')->insert($postStore);
+        //     DB::table('posts')->insert($postStore);
 
-        }
-        return response('Succeded');
+        // }
+        // return response('Succeded');
 
 
     }
@@ -85,7 +85,8 @@ class HomeController extends Controller
      */
     public function show($id)
     {
-        //
+        $show = DB::table('posts')->where('id', $id)->first();
+        return response()->json($show);
     }
 
     /**
@@ -108,7 +109,11 @@ class HomeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+       $post['title'] = $request->title;
+        $post['body'] = $request->body;
+
+        DB::table('posts')->where('id', $id)->update($post);
+        return response('Updated');
     }
 
     /**
@@ -119,6 +124,7 @@ class HomeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('posts')->where('id' , $id)->delete();
+        return response('Deleted');
     }
 }
